@@ -16,10 +16,13 @@ TEST_SOURCE = \
 all: install run
 
 install:
-	sh build/script1.sh $(QMAKE_PATH)
+	rm -rf install
+	mkdir install
+	qmake source/Calculator.pro -o ./install/Makefile
+	make -C ./install
 
 run: install
-	open calc/./Calculator*
+	open install/./Calculator*
 
 uninstall:
 	rm -rf calc/*
@@ -27,18 +30,19 @@ uninstall:
 clean:
 	rm -rf gcov_test
 	rm -rf test/exec*
-	rm -rf calc/* build/.*q* \
-	build/*.o build/*.h \
-	build/*.cpp build/Makefile \
-	build/Calculator* build/.tmp \
-	rm -rf *.gz build/*bak
+	rm -rf install
+	rm -rf *.tgz
 	rm -rf *.gcno *.gcda *.info check_res
 
 dvi:
 	open doc/readme.pdf
 
 dist:
-	sh build/script2.sh
+	rm -rf Calculator.1.0
+	mkdir Calculator.1.0
+	cp -r Makefile source Calculator.1.0/
+	tar cvzf ./Calculator.tgz Calculator.1.0/
+	rm -rf Calculator.1.0/
 
 tests:
 	$(CC) source/calculator.h $(TEST_SOURCE) test/test.c -o test/exec $(LIN_FLAGS) $(GCOVFLAGS) $(LDFLAGS)
