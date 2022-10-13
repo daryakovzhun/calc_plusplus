@@ -1,6 +1,8 @@
 #include "calculator.h"
 #include <locale.h>
 
+using namespace std;
+
 void calculate(char op, double a, double b, double* result) {
     if (op == '+') {
         *result = a + b;
@@ -41,11 +43,11 @@ void calculate(char op, double a, double b, double* result) {
 
 int get_result(char* str, double* result, double x) {
     setlocale(LC_NUMERIC, "C");
-    Stack* st = NULL;
+    stack<double> st;
     int len_str = strlen(str), error = 0;
     for (int i = 0; i < len_str && !error; i++) {
         if (str[i] == 'x') {
-            push(&st, x);
+            st.push(x);
         } else if (isdigit(str[i]) || str[i] == '.') {
             char temp[50];
             int k = 0;
@@ -55,32 +57,37 @@ int get_result(char* str, double* result, double x) {
                 i++;
             }
             temp[k++] = '\0';
-            push(&st, atof(temp));
-        } else if (is_function(str[i]) || is_operator(str[i])) {
-            if (is_empty(st)) {
+            st.push(atof(temp));
+        } else if (is_func(str[i]) || is_operator(str[i])) {
+            if (st.empty()) {
                error = INCORRECT_EXPRESSION;
             } else {
-                double a = pop(&st), b = 0, res = 0;
-                if (str[i] == '@' || str[i] == '~' || is_function(str[i])) {
+                double a = st.top(), b = 0, res = 0;
+                st.pop();
+                if (str[i] == '@' || str[i] == '~' || is_func(str[i])) {
                     calculate(str[i], a, 0, &res);
                 } else {
-                    if (is_empty(st)) {
+                    if (st.empty()) {
                         error = INCORRECT_EXPRESSION;
                     } else {
-                        b = pop(&st);
+                        b = st.top();
+                        st.pop();
                         calculate(str[i], b, a, &res);
                     }
                 }
                 if (isnan(res) || !isfinite(res)) {
                     error = CALCULATION_ERROR;
                 }
-                push(&st, res);
+                st.push(res);
             }
         }
     }
 
-    if (error != CALCULATION_ERROR)
-        *result = pop(&st);
+    if (error != CALCULATION_ERROR) {
+        *result = st.top();
+        st.pop();
+    }
+
 
     return error;
 }

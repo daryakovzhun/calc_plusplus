@@ -1,5 +1,8 @@
 #include "calculator.h"
 
+#include <iostream>
+#include <QDebug>
+
 int compute(const char* str_const, char* str_result, double x) {
     char str[226];
     snprintf(str, sizeof(str), "%s", str_const);

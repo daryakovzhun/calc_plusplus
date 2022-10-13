@@ -1,5 +1,9 @@
 #include "calculator.h"
 
+#include "QDebug"
+
+using namespace std;
+
 void replace_str(char* str) {
     char temp[226];
     int k = 0;
@@ -47,14 +51,14 @@ void replace_str(char* str) {
     // strcpy(str, temp);
 }
 
-int is_function(char op) {
-    int is_function = 0;
+int is_func(char op) {
+    int is_func = 0;
     if (op == 'c' || op == 's' || op == 't' ||
         op == 'a' || op == 'b' || op == 'd' ||
         op == 'q' || op == 'l' || op == 'g') {
-        is_function = 1;
+        is_func = 1;
     }
-    return is_function;
+    return is_func;
 }
 
 int is_operator(char symbol) {
@@ -67,17 +71,17 @@ int is_operator(char symbol) {
     return is_op;
 }
 
-int get_priority(char operator) {
+int get_priority(char op) {
     int priority = -2;
-    if (operator == '+' || operator == '-') {
+    if (op == '+' || op == '-') {
         priority = 0;
-    } else if (operator == '*' || operator == '/' || operator == '%') {
+    } else if (op == '*' || op == '/' || op == '%') {
         priority = 1;
-    } else if (operator == '^') {
+    } else if (op == '^') {
         priority = 3;
-    } else if (operator == '~' || operator == '@') {
+    } else if (op == '~' || op == '@') {
         priority = 2;
-    } else if (operator == '(') {
+    } else if (op == '(') {
         priority = -1;
     }
     return priority;
@@ -98,7 +102,7 @@ int to_postfix(char* str, char* result) {
     int error = 0;
     error = count_bracket(str);
     replace_str(str);
-    Stack* st = NULL;
+    stack<char> st;
     size_t k = 0, len_str = strlen(str);
 
     for (size_t i = 0; i < len_str && error == 0; i++) {
@@ -106,44 +110,49 @@ int to_postfix(char* str, char* result) {
             result[k++] = str[i];
             if (i == len_str - 1 || (!isdigit(str[i + 1]) && str[i + 1] != '.'))
                 result[k++] = ' ';
-        } else if (str[i] == '(' || is_function(str[i])) {
-            push(&st, str[i]);
+        } else if (str[i] == '(' || is_func(str[i])) {
+            st.push(str[i]);
         } else if (is_operator(str[i])) {
             char op = str[i], op2;
-            while (!is_empty(st) && (op2 = pop(&st))) {
+            while (!st.empty() && (op2 = st.top())) {
+                st.pop();
                 if (get_priority(op2) >= get_priority(op)) {
                     result[k++] = op2;
                     result[k++] = ' ';
                 } else {
-                    push(&st, op2);
+                    st.push(op2);
                     break;
                 }
             }
-            push(&st, op);
+            st.push(op);
         } else if (str[i] == ')') {
             char top;
             if (str[i - 1] == '(') {
                 error = INCORRECT_EXPRESSION;
                 break;
             }
-            while (!is_empty(st) && (top = pop(&st)) != '(') {
+            while (!st.empty() && (top = st.top()) != '(') {
+                st.pop();
                 result[k++] = top;
                 result[k++] = ' ';
             }
-            if (!is_empty(st)) {
-                top = pop(&st);
-                if (is_function(top)) {
+            st.pop();
+            if (!st.empty()) {
+                top = st.top();
+                st.pop();
+                if (is_func(top)) {
                     result[k++] = top;
                     result[k++] = ' ';
                 } else {
-                    push(&st, top);
+                    st.push(top);
                 }
             }
         }
     }
 
-    while (!is_empty(st) && !error) {
-        char op =  pop(&st);
+    while (!st.empty() && !error) {
+        char op =  st.top();
+        st.pop();
         if ((op == '(' || op == ')')) {
             error = INCORRECT_EXPRESSION;
         }
