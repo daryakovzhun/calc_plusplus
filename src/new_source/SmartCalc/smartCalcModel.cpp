@@ -61,7 +61,9 @@ bool SmartCalcModel::to_postfix() {
     return error;
 }
 
-int SmartCalcModel::evaluate(char* str, double* result, double x){}
+int SmartCalcModel::evaluate(char* str, double* result, double x) {
+
+}
 
 int SmartCalcModel::get_priority(char op) {
     int priority = -2;
@@ -110,51 +112,31 @@ int SmartCalcModel::is_operator(char symbol) {
     return is_op;
 }
 
-void SmartCalcModel::replace_str (size_t* pos, std::string src, std::string dst) {
-    while(*pos != std::string::npos) {
-        expression_.replace(*pos, src.size(), dst);
-        *pos = expression_.find(src, *pos);
+void SmartCalcModel::replace_str (std::string src, std::string dst) {
+    size_t pos = expression_.find(src);
+    while(pos != std::string::npos) {
+        expression_.replace(pos, src.size(), dst);
+        pos = expression_.find(src, pos);
     }
 }
 
 bool SmartCalcModel::replace() {
-    size_t pos = expression_.find("acos");
-    replace_str(&pos, "acos", "C");
-
-    pos = expression_.find("asin");
-    replace_str(&pos, "asin", "S");
-
-    pos = expression_.find("atan");
-    replace_str(&pos, "atan", "T");
-
-    pos = expression_.find("cos");
-    replace_str(&pos, "cos", "c");
-
-    pos = expression_.find("sin");
-    replace_str(&pos, "sin", "s");
-
-    pos = expression_.find("tan");
-    replace_str(&pos, "tan", "t");
-
-    pos = expression_.find("sqrt");
-    replace_str(&pos, "sqrt", "q");
-
-    pos = expression_.find("ln");
-    replace_str(&pos, "ln", "l");
-
-    pos = expression_.find("log");
-    replace_str(&pos, "log", "L");
-
-    pos = expression_.find("mod");
-    replace_str(&pos, "mod", "%");
+    replace_str("acos(", "C(");
+    replace_str("asin(", "S(");
+    replace_str("atan(", "T(");
+    replace_str("cos(", "c(");
+    replace_str("sin(", "s(");
+    replace_str("tan(", "t(");
+    replace_str("sqrt(", "q(");
+    replace_str("ln(", "l(");
+    replace_str("log(", "L(");
+    replace_str("mod", "%");
 
     if (expression_[0] == '+') { expression_[0] = '@'; }
-    pos = expression_.find("(+");
-    replace_str(&pos, "(+", "(@");
+    replace_str("(+", "(@");
 
     if (expression_[0] == '-') { expression_[0] = '~'; }
-    pos = expression_.find("(-");
-    replace_str(&pos, "(-", "(~");
+    replace_str("(-", "(~");
 
     size_t count_alfha = 0;
     bool error = false;
@@ -175,10 +157,10 @@ bool SmartCalcModel::replace() {
 
 void SmartCalcModel::calculate(char op, double a, double b, double* result) {}
 
-// int main () {
-//     SmartCalcModel model;
-//     model.set_expression("()");
-//     model.to_postfix();
+int main () {
+    SmartCalcModel model;
+    model.set_expression("sin( + cos(2 + 3)*atan(65/2))");
+    model.to_postfix();
 
-//     return 0;
-// }
+    return 0;
+}
