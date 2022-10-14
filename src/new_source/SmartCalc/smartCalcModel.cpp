@@ -1,7 +1,5 @@
 #include "smartCalcModel.h"
 
-#include <iostream>
-
 bool SmartCalcModel::to_postfix() {
     bool error = count_bracket() || replace();
     std::stack<char> st;
@@ -57,12 +55,63 @@ bool SmartCalcModel::to_postfix() {
         ex_postfix_ += op; ex_postfix_ += ' ';
     }
 
-    std::cout << "str = " << ex_postfix_ << "\nerror = " << error;
     return error;
 }
 
-int SmartCalcModel::evaluate(char* str, double* result, double x) {
+bool SmartCalcModel::check_double_dot (std::string* str_number) {
+    const auto count_dot = std::count(str_number->cbegin(), str_number->cend(), '.');
+    return count_dot > 1;
+}
 
+bool SmartCalcModel::evaluate() {
+    setlocale(LC_NUMERIC, "C");
+    std::stack<double> st;
+    size_t len_str = ex_postfix_.size();
+    bool error = false;
+    for (int i = 0; i < len_str && !error; i++) {
+        if (ex_postfix_[i] == 'x') {
+            st.push(x_);
+        } else if (isdigit(ex_postfix_[i]) || ex_postfix_[i] == '.') {
+            std::string str_number;
+            int k = 0;
+            str_number += ex_postfix_[i];
+            while (i != len_str - 1 &&  ex_postfix_[i + 1] != ' ') {
+                str_number += ex_postfix_[i + 1];
+                i++;
+            }
+            if (check_double_dot(&str_number)) { error = true; }
+            st.push(atof(str_number.c_str()));
+        } else if (is_func(ex_postfix_[i]) || is_operator(ex_postfix_[i])) {
+            if (st.empty()) {
+               error = true;
+            } else {
+                double a = st.top(), b = 0, res = 0;
+                st.pop();
+                if (ex_postfix_[i] == '@' || ex_postfix_[i] == '~' || is_func(ex_postfix_[i])) {
+                    calculate(ex_postfix_[i], &a, 0, &res);
+                } else {
+                    if (st.empty()) {
+                        error = true;
+                    } else {
+                        b = st.top();
+                        st.pop();
+                        calculate(ex_postfix_[i], &b, &a, &res);
+                    }
+                }
+                if (std::isnan(res) || !std::isfinite(res)) {
+                    error = true;
+                }
+                st.push(res);
+            }
+        }
+    }
+
+    if (error == false) {
+        result_ = st.top();
+        st.pop();
+    }
+
+    return error;
 }
 
 int SmartCalcModel::get_priority(char op) {
@@ -155,12 +204,48 @@ bool SmartCalcModel::replace() {
     return error;
 }
 
-void SmartCalcModel::calculate(char op, double a, double b, double* result) {}
-
-int main () {
-    SmartCalcModel model;
-    model.set_expression("sin( + cos(2 + 3)*atan(65/2))");
-    model.to_postfix();
-
-    return 0;
+void SmartCalcModel::calculate(char op, double* a, double* b, double* result) {
+    if (op == '+') {
+        *result = *a + *b;
+    } else if (op == '-') {
+        *result = *a - *b;
+    } else if (op == '*') {
+        *result = *a * *b;
+    } else if (op == '/') {
+        *result = *a / *b;
+    } else if (op == '^') {
+        *result = pow(*a, *b);
+    } else if (op == '%') {
+        *result = fmod(*a, *b);
+    } else if (op == '@') {
+        *result = *a;
+    } else if (op == '~') {
+        *result = -(*a);
+    } else if (op == 'c') {
+        *result = cos(*a);
+    } else if (op == 's') {
+        *result = sin(*a);
+    } else if (op == 't') {
+        *result = tan(*a);
+    } else if (op == 'a') {
+        *result = acos(*a);
+    } else if (op == 'b') {
+        *result = asin(*a);
+    } else if (op == 'd') {
+        *result = atan(*a);
+    } else if (op == 'q') {
+        *result = sqrt(*a);
+    } else if (op == 'l') {
+        *result = (double) logl(*a);
+    } else if (op == 'g') {
+        *result = (double) log10l(*a);
+    }
 }
+
+// int main () {
+//     SmartCalcModel model;
+//     model.set_expression("5.234. + 32");
+//     std::cout << "result = " << model.get_result();
+
+//     return 0;
+// }
