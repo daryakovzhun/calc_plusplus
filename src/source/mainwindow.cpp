@@ -243,3 +243,4 @@ void MainWindow::on_button_deposit_clicked() {
     window.setWindowTitle("Deposit calculator");
     window.exec();
 }
+

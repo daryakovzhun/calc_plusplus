@@ -12,8 +12,9 @@
 class SmartCalcModel
 {
     public:
-        SmartCalcModel() : result_(0), x_(0), expression_(""), ex_postfix_("") {};
+        SmartCalcModel() : expression_(""), ex_postfix_(""), result_(0), x_(0) {};
         void set_expression(std::string str) { expression_ = str; }
+        void set_x(double x) { x_ =  x; }
         void reset() {
             result_ = 0;
             x_ = 0;
@@ -23,7 +24,7 @@ class SmartCalcModel
         double get_result() {
             bool error = to_postfix() || evaluate();
             if (error) {
-                std::cout << "Error!!!\n";
+                throw std::invalid_argument("Incorrect expression");
             }
 
             return result_;

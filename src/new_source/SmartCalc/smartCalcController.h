@@ -8,11 +8,10 @@ class SmartCalcController
     private:
         SmartCalcModel *model;
     public:
-        SmartCalcController(SmartCalcModel *m):model(m) {};
-        double add(double a);
-        double sub(double a);
-        double mult(double a);
-        double div(double a);
+        SmartCalcController(SmartCalcModel *m) : model(m) {};
+        void set_expression(std::string expression);
+        void set_x(double x);
+        double get_result();
         void reset();
 };
 

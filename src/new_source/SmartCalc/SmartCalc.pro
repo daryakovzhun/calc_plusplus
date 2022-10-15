@@ -18,16 +18,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     main.cpp \
     smartCalcController.cpp \
-    smartCalcMainView.cpp \
+    smartcalcmainview.cpp \
     smartCalcModel.cpp \
 
 HEADERS += \
     smartCalcController.h \
-    smartCalcMainView.h \
+    smartcalcmainview.h \
     smartCalcModel.h \
 
 FORMS += \
-    smartCalcMainView.ui
+    smartcalcmainview.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

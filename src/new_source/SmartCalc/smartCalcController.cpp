@@ -1,29 +1,17 @@
 #include "smartCalcController.h"
 
-double SmartCalcController::add(double a)
-{
-    model->add(a);
-    return model->getData();
+void SmartCalcController::set_expression(std::string expression) {
+    model->set_expression(expression);
 }
 
-double SmartCalcController::sub(double a)
-{
-    model->add(-a);
-    return model->getData();
+void SmartCalcController::set_x(double x) {
+    model->set_x(x);
 }
 
-double SmartCalcController::mult(double a)
-{
-    model->mult(a);
-    return model->getData();
+double SmartCalcController::get_result() {
+    return model->get_result();
 }
 
-double SmartCalcController::div(double a)
-{
-    model->mult(1.0/a);
-    return model->getData();
-}
-
-void SmartCalcController::reset(){
+void SmartCalcController::reset() {
     model->reset();
 }
