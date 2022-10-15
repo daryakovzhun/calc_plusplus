@@ -3,7 +3,8 @@
 
 #include <QMainWindow>
 #include "smartCalcController.h"
-//#include <QVector>
+#include <algorithm>
+#include <cctype>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SmartCalcMainView; }
@@ -15,12 +16,12 @@ class SmartCalcMainView : public QMainWindow
 
 public:
     SmartCalcMainView(SmartCalcController *c, QWidget *parent = nullptr);
-//    explicit SmartCalcMainView(QWidget *parent = nullptr);
     ~SmartCalcMainView();
 
 private:
     Ui::SmartCalcMainView *ui;
     SmartCalcController *controller;
+    QString change_op();
 
 private slots:
    void digits_numbers();

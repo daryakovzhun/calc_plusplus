@@ -1,6 +1,8 @@
 #include "smartcalcmainview.h"
 #include "ui_smartcalcmainview.h"
 
+#include <iostream>
+
 SmartCalcMainView::SmartCalcMainView(SmartCalcController *c, QWidget *parent)
     : QMainWindow(parent), ui(new Ui::SmartCalcMainView), controller(c)
 {
@@ -41,101 +43,55 @@ void SmartCalcMainView::on_button_reset_clicked() {
 }
 
 void SmartCalcMainView::on_button_clear_clicked() {
+    std::string str = ui->result->text().toStdString();
+    std::string op = "+-*/";
+    size_t len = str.size();
+    if (len > 0) {
+        if (std::count(op.begin(), op.end(), str[len - 1]) || str[str.size() - 1] == ')') {
+            str.erase(str.size() - 1);
+        } else if (isdigit(str[str.size() - 1]) || str[str.size() - 1] == '.') {
+            while (len > 0 && (isdigit(str[str.size() - 1]) || str[str.size() - 1] == '.')) {
+                str.erase(str.size() - 1);
+                len = str.size();
+            }
+        } else {
+            if (str[str.size() - 1] == '(') {
+                str.erase(str.size() - 1);
+            }
+            while (len > 0 && (isalpha(str[str.size() - 1]) || str[str.size() - 1] == '^')) {
+                str.erase(str.size() - 1);
+                len = str.size();
+            }
+        }
+    }
+
+    ui->result->setText(QString::fromStdString(str));
+}
+
+QString SmartCalcMainView::change_op() {
     QString str = ui->result->text();
-    int len = str.length();
-    if (len > 0 && (str[len - 1] == '(' || str[len - 1] == ' ')) {
-        if (str[len - 1] == ' ' || str[len - 1] == '(') {
-            str.chop(1);
-            len = str.length();
-        }
-        while (len > 0 && str[len - 1] != ' ' && str[len - 1] != '('
-                    && str[len - 1] != '+' && str[len - 1] != '-') {
-            str.chop(1);
-            len = str.length();
-        }
-    } else {
+    std::string op = "+-*/";
+    size_t len = str.size();
+    if (len > 0 && std::count(op.begin(), op.end(), str[len - 1])) {
         str.chop(1);
     }
-    ui->result->setText(str);
-    str.clear();
+    return str;
 }
 
 void SmartCalcMainView::on_button_sum_clicked() {
-//    QString str = ui->result->text();
-//    int len = str.length();
-
-//    if (len == 0 || (len == 1 && str[len - 1] == '-') || str[len - 1] == '(') {
-//        if (len > 0 && str[len - 1] == '(') {
-//            ui->result->setText(str + "+");
-//        } else {
-//            ui->result->setText("+");
-//        }
-//    } else {
-//        if (len > 0 && str[len - 1] == '-') {
-//            str.chop(1);
-//            ui->result->setText(str + "+");
-//        } else {
-//            if (len >= 2 && str[len - 2] == '-' && str[len - 1] == ' ') {
-//                str.chop(3);
-//            }
-//            ui->result->setText(str + "+");
-//        }
-//    }
-//    str.clear();
-
-    ui->result->setText(ui->result->text() + "+");
+    ui->result->setText(change_op() + "+");
 }
 
 void SmartCalcMainView::on_button_sub_clicked() {
-//    QString str = ui->result->text();
-//    int len = str.length();
-
-//    if (len == 0 || (len == 1 && str[len - 1] == '+') || str[len - 1] == '(') {
-//        if (len > 0 && str[len - 1] == '(') {
-//            ui->result->setText(str + "-");
-//        } else {
-//            ui->result->setText("-");
-//        }
-//    } else {
-//        if (len > 0 && str[len - 1] == '+') {
-//            str.chop(1);
-//            ui->result->setText(str + "-");
-//        } else {
-//            if (len >= 2 && str[len - 2] == '+' && str[len - 1] == ' ') {
-//                str.chop(3);
-//            }
-//            ui->result->setText(str + "-");
-//        }
-//    }
-//    str.clear();
-
-    ui->result->setText(ui->result->text() + "-");
+    ui->result->setText(change_op() + "-");
 }
 
 void SmartCalcMainView::on_button_mul_clicked() {
-//    QString str = ui->result->text();
-//    int len = str.length();
-//    if (len > 2 && str[len - 1] == ' ' && (str[len - 2] == '/'
-//            || str[len - 2] == '+' || str[len - 2] == '-')) {
-//        str.chop(3);
-//    }
-//    ui->result->setText(str + "*");
-//    str.clear();
-
-    ui->result->setText(ui->result->text() + "*");
+    ui->result->setText(change_op() + "*");
 }
 
 void SmartCalcMainView::on_button_div_clicked() {
-//    QString str = ui->result->text();
-//    int len = str.length();
-//    if (len > 2 && str[len - 1] == ' ' && (str[len - 2] == '*'
-//            || str[len - 2] == '+' || str[len - 2] == '-')) {
-//        str.chop(3);
-//    }
-//    ui->result->setText(str + "/");
-//    str.clear();
-
-    ui->result->setText(ui->result->text() + "/");
+    ui->result->setText(change_op() + "/");
 }
 
 void SmartCalcMainView::on_button_mod_clicked() {
@@ -179,7 +135,7 @@ void SmartCalcMainView::on_button_asin_clicked() {
 }
 
 void SmartCalcMainView::on_button_pow_clicked() {
-    ui->result->setText(ui->result->text() + "^(");
+    ui->result->setText(change_op() + "^(");
 }
 
 void SmartCalcMainView::on_button_op_bracket_clicked() {
