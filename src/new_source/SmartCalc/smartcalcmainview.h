@@ -5,6 +5,7 @@
 #include "smartCalcController.h"
 #include <algorithm>
 #include <cctype>
+#include <QRegularExpressionValidator>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SmartCalcMainView; }

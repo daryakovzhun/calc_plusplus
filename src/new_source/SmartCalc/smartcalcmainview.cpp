@@ -1,14 +1,14 @@
 #include "smartcalcmainview.h"
 #include "ui_smartcalcmainview.h"
 
-#include <iostream>
-
 SmartCalcMainView::SmartCalcMainView(SmartCalcController *c, QWidget *parent)
     : QMainWindow(parent), ui(new Ui::SmartCalcMainView), controller(c)
 {
     ui->setupUi(this);
     ui->result->setMaxLength(255);
 //    ui->result->setReadOnly(true);
+    ui->enter_x->setValidator(new QRegularExpressionValidator(
+        QRegularExpression("(^[-0-9])([0-9]*)(\\.?)([0-9]*)"), this));
 
     connect(ui->button_0, SIGNAL(clicked()), this, SLOT(digits_numbers()));
     connect(ui->button_1, SIGNAL(clicked()), this, SLOT(digits_numbers()));
@@ -157,6 +157,7 @@ void SmartCalcMainView::on_button_eq_clicked() {
     if (ui->result->text().length() > 0) {
         std::string expression = ui->result->text().toStdString();
         controller->set_expression(expression);
+        controller->set_x(ui->enter_x->text().toDouble());
         try {
             double result = controller->get_result();
             ui->result->setText(QString::number(result, 'f'));
