@@ -3,7 +3,7 @@
 bool SmartCalcModel::to_postfix() {
     bool error = count_bracket() || replace();
     std::stack<char> st;
-    size_t k = 0, len_str = expression_.size();
+    size_t len_str = expression_.size();
 
     for (size_t i = 0; i < len_str && !error; i++) {
         if (isdigit(expression_[i]) || expression_[i] == 'x' || expression_[i] == '.') {
@@ -68,12 +68,11 @@ bool SmartCalcModel::evaluate() {
     std::stack<double> st;
     size_t len_str = ex_postfix_.size();
     bool error = false;
-    for (int i = 0; i < len_str && !error; i++) {
+    for (size_t i = 0; i < len_str && !error; i++) {
         if (ex_postfix_[i] == 'x') {
             st.push(x_);
         } else if (isdigit(ex_postfix_[i]) || ex_postfix_[i] == '.') {
             std::string str_number;
-            int k = 0;
             str_number += ex_postfix_[i];
             while (i != len_str - 1 &&  ex_postfix_[i + 1] != ' ') {
                 str_number += ex_postfix_[i + 1];
@@ -141,24 +140,14 @@ bool SmartCalcModel::count_bracket() {
     return count_cl != count_op;
 }
 
-int SmartCalcModel::is_func(char op) {
-    int is_func = 0;
-    if (op == 'c' || op == 's' || op == 't' ||
-        op == 'C' || op == 'S' || op == 'T' ||
-        op == 'q' || op == 'l' || op == 'L') {
-        is_func = 1;
-    }
-    return is_func;
+bool SmartCalcModel::is_func(char op) {
+    std::string str_all_op = "cstCSTqlL";
+    return std::count(str_all_op.cbegin(), str_all_op.cend(), op);
 }
 
-int SmartCalcModel::is_operator(char symbol) {
-    int is_op = 0;
-    if (symbol == '+' || symbol == '-' || symbol == '*' ||
-        symbol == '/' || symbol == '^' || symbol == '%' ||
-        symbol == '@' || symbol == '~') {
-        is_op = 1;
-    }
-    return is_op;
+bool SmartCalcModel::is_operator(char symbol) {
+    std::string str_all_op = "+-*/^%@~";
+    return std::count(str_all_op.cbegin(), str_all_op.cend(), symbol);
 }
 
 void SmartCalcModel::replace_str (std::string src, std::string dst) {
@@ -189,7 +178,7 @@ bool SmartCalcModel::replace() {
 
     size_t count_alfha = 0;
     bool error = false;
-    for (int i = 0; i < expression_.size(); i++) {
+    for (size_t i = 0; i < expression_.size(); i++) {
         if (isalpha(expression_[i])) {
             count_alfha++;
             if (count_alfha > 1) {
