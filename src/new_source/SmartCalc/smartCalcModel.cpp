@@ -231,10 +231,3 @@ void SmartCalcModel::calculate(char op, double* a, double* b, double* result) {
     }
 }
 
-// int main () {
-//     SmartCalcModel model;
-//     model.set_expression("5.234. + 32");
-//     std::cout << "result = " << model.get_result();
-
-//     return 0;
-// }
