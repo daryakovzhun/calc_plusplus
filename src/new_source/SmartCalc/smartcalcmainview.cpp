@@ -78,7 +78,7 @@ void SmartCalcMainView::on_button_sum_clicked() {
             if (len >= 2 && str[len - 2] == '-' && str[len - 1] == ' ') {
                 str.chop(3);
             }
-            ui->result->setText(str + " + ");
+            ui->result->setText(str + "+");
         }
     }
     str.clear();
@@ -102,7 +102,7 @@ void SmartCalcMainView::on_button_sub_clicked() {
             if (len >= 2 && str[len - 2] == '+' && str[len - 1] == ' ') {
                 str.chop(3);
             }
-            ui->result->setText(str + " - ");
+            ui->result->setText(str + "-");
         }
     }
     str.clear();
@@ -115,7 +115,7 @@ void SmartCalcMainView::on_button_mul_clicked() {
             || str[len - 2] == '+' || str[len - 2] == '-')) {
         str.chop(3);
     }
-    ui->result->setText(str + " * ");
+    ui->result->setText(str + "*");
     str.clear();
 }
 
@@ -126,12 +126,12 @@ void SmartCalcMainView::on_button_div_clicked() {
             || str[len - 2] == '+' || str[len - 2] == '-')) {
         str.chop(3);
     }
-    ui->result->setText(str + " / ");
+    ui->result->setText(str + "/");
     str.clear();
 }
 
 void SmartCalcMainView::on_button_mod_clicked() {
-    ui->result->setText(ui->result->text() + " mod ");
+    ui->result->setText(ui->result->text() + "mod");
 }
 
 void SmartCalcMainView::on_button_sqrt_clicked() {
@@ -197,7 +197,6 @@ void SmartCalcMainView::on_button_eq_clicked() {
             double result = controller->get_result();
             ui->result->setText(QString::number(result, 'f'));
         } catch(const std::exception& e) {
-//            std::cerr << e.what() << '\n';
             ui->result->setText("Error");
         }
         controller->reset();
