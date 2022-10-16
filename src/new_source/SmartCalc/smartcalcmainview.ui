@@ -92,7 +92,7 @@ QTabBar::tab:!selected {
        <enum>QTabWidget::North</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="iconSize">
        <size>
@@ -1124,6 +1124,10 @@ color: white;</string>
               <height>16777215</height>
              </size>
             </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: white;
+color: black;</string>
+            </property>
            </widget>
           </item>
           <item row="4" column="1" colspan="2">
@@ -1136,7 +1140,7 @@ color: white;</string>
             </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
-	background-color: rgb(107, 107, 107);
+	background-color: rgb(167, 167, 167);
 	color: rgb(38, 38, 38);
 	border-color: rgb(81, 81, 81);
 }
@@ -1164,6 +1168,10 @@ color: white;</string>
               <height>16777215</height>
              </size>
             </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: white;
+color: black;</string>
+            </property>
            </widget>
           </item>
           <item row="1" column="2">
@@ -1179,6 +1187,10 @@ color: white;</string>
               <width>50</width>
               <height>16777215</height>
              </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: white;
+color: black;</string>
             </property>
            </widget>
           </item>

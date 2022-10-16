@@ -187,19 +187,16 @@ void SmartCalcMainView::on_tabWidget_currentChanged(int index)
     }
 }
 
+
+
 void SmartCalcMainView::on_build_graph_clicked() {
     ui->graph->clearGraphs();
 
     if (ui->result->text().length() > 0) {
-        double a = -10;
-        if (ui->xmin->text().length() != 0)
-            a = ui->xmin->text().toDouble();
-        double b = 10;
-        if (ui->xmax->text().length() != 0)
-            b = ui->xmax->text().toDouble();
-        double h = 1;
-        if (ui->step->text().length() != 0)
-            h = ui->step->text().toDouble();
+        double a = -10, b = 10, h = 1;
+        if (ui->xmin->text().length() != 0) a = ui->xmin->text().toDouble();
+        if (ui->xmax->text().length() != 0) b = ui->xmax->text().toDouble();
+        if (ui->step->text().length() != 0) h = ui->step->text().toDouble();
 
         if (a > b || h <= 0) {
             a = 0;
@@ -207,12 +204,8 @@ void SmartCalcMainView::on_build_graph_clicked() {
             h = 1;
         }
 
-        if (a < -100000) {
-            a = -100000;
-        }
-        if (b > 100000) {
-            b = 100000;
-        }
+        if (a < -100000) { a = -100000; }
+        if (b > 100000) { b = 100000; }
 
         int N = (b - a) / h + 2;
 
@@ -241,12 +234,10 @@ void SmartCalcMainView::on_build_graph_clicked() {
         ui->graph->graph(0)->setData(x, y);
         ui->graph->graph(0)->setPen(QColor(50, 50, 50, 255));
         ui->graph->graph(0)->setLineStyle(QCPGraph::lsNone);
-
         ui->graph->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 4));
 
         ui->graph->xAxis->setLabel("x");
         ui->graph->yAxis->setLabel("y");
-
         ui->graph->xAxis->setRange(a, b);
 
         double minY = y[0], maxY = y[0];
@@ -255,9 +246,7 @@ void SmartCalcMainView::on_build_graph_clicked() {
           if (y[i] >= maxY) maxY = y[i] + 1;
         }
         ui->graph->yAxis->setRange(minY, maxY);
-
         ui->graph->replot();
-
         controller->reset();
     }
 }
