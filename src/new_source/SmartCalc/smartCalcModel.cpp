@@ -1,6 +1,9 @@
 #include "smartCalcModel.h"
 
 bool SmartCalcModel::to_postfix() {
+    if (ex_postfix_ != "") {
+        return false;
+    }
     bool error = count_bracket() || replace();
     std::stack<char> st;
     size_t len_str = expression_.size();
@@ -216,17 +219,17 @@ void SmartCalcModel::calculate(char op, double* a, double* b, double* result) {
         *result = sin(*a);
     } else if (op == 't') {
         *result = tan(*a);
-    } else if (op == 'a') {
+    } else if (op == 'C') {
         *result = acos(*a);
-    } else if (op == 'b') {
+    } else if (op == 'S') {
         *result = asin(*a);
-    } else if (op == 'd') {
+    } else if (op == 'T') {
         *result = atan(*a);
     } else if (op == 'q') {
         *result = sqrt(*a);
     } else if (op == 'l') {
         *result = (double) logl(*a);
-    } else if (op == 'g') {
+    } else if (op == 'L') {
         *result = (double) log10l(*a);
     }
 }

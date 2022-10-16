@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cctype>
 #include <QRegularExpressionValidator>
+#include <QVector>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SmartCalcMainView; }
@@ -45,11 +46,11 @@ private slots:
    void on_button_op_bracket_clicked();
    void on_button_cl_bracket_clicked();
    void on_button_eq_clicked();
-//   void on_button_graph_clicked();
    void on_button_x_clicked();
    void on_button_pow_clicked();
    void on_button_clear_clicked();
-//   void on_button_credit_clicked();
-//   void on_button_deposit_clicked();
+   void on_build_graph_clicked();
+   void on_tabWidget_currentChanged(int index);
+   void on_pushButton_clicked();
 };
 #endif // SMARTCALCMAINVIEW_H

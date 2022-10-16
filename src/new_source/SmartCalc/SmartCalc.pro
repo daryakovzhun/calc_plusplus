@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -20,11 +20,13 @@ SOURCES += \
     smartCalcController.cpp \
     smartcalcmainview.cpp \
     smartCalcModel.cpp \
+    qcustomplot.cpp \
 
 HEADERS += \
     smartCalcController.h \
     smartcalcmainview.h \
     smartCalcModel.h \
+    qcustomplot.h \
 
 FORMS += \
     smartcalcmainview.ui

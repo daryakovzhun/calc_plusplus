@@ -9,6 +9,12 @@ SmartCalcMainView::SmartCalcMainView(SmartCalcController *c, QWidget *parent)
 //    ui->result->setReadOnly(true);
     ui->enter_x->setValidator(new QRegularExpressionValidator(
         QRegularExpression("(^[-0-9])([0-9]*)(\\.?)([0-9]*)"), this));
+    ui->xmin->setValidator(new QRegularExpressionValidator(
+        QRegularExpression("(^[-0-9])([0-9]*)(\\.?)([0-9]*)"), this));
+    ui->xmax->setValidator(new QRegularExpressionValidator(
+        QRegularExpression("(^[-0-9])([0-9]*)(\\.?)([0-9]*)"), this));
+    ui->step->setValidator(new QRegularExpressionValidator(
+        QRegularExpression("([0-9]*)(\\.?)([0-9]*)"), this));
 
     connect(ui->button_0, SIGNAL(clicked()), this, SLOT(digits_numbers()));
     connect(ui->button_1, SIGNAL(clicked()), this, SLOT(digits_numbers()));
@@ -158,35 +164,106 @@ void SmartCalcMainView::on_button_eq_clicked() {
         std::string expression = ui->result->text().toStdString();
         controller->set_expression(expression);
         controller->set_x(ui->enter_x->text().toDouble());
+
         try {
             double result = controller->get_result();
             ui->result->setText(QString::number(result, 'f'));
         } catch(const std::exception& e) {
             ui->result->setText("Error");
         }
+
         controller->reset();
     }
 }
 
-//void SmartCalcMainView::on_button_graph_clicked() {
-//    Graph window;
-//    window.setLabel(ui->result->text());
-//    window.setModal(true);
-//    window.setWindowTitle("Graph");
-//    window.exec();
-//}
+void SmartCalcMainView::on_tabWidget_currentChanged(int index)
+{
+    if (index == 1) {
+        if (ui->result->text().length()) {
+            ui->expression->setText("y = " + ui->result->text());
+        } else {
+            ui->expression->setText("y = expression");
+        }
+    }
+}
 
+void SmartCalcMainView::on_build_graph_clicked() {
+    ui->graph->clearGraphs();
 
-//void SmartCalcMainView::on_button_credit_clicked() {
-//    Credit window;
-//    window.setModal(true);
-//    window.setWindowTitle("Credit calculator");
-//    window.exec();
-//}
+    if (ui->result->text().length() > 0) {
+        double a = -10;
+        if (ui->xmin->text().length() != 0)
+            a = ui->xmin->text().toDouble();
+        double b = 10;
+        if (ui->xmax->text().length() != 0)
+            b = ui->xmax->text().toDouble();
+        double h = 1;
+        if (ui->step->text().length() != 0)
+            h = ui->step->text().toDouble();
 
-//void SmartCalcMainView::on_button_deposit_clicked() {
-//    Deposit window;
-//    window.setModal(true);
-//    window.setWindowTitle("Deposit calculator");
-//    window.exec();
-//}
+        if (a > b || h <= 0) {
+            a = 0;
+            b = 0;
+            h = 1;
+        }
+
+        if (a < -100000) {
+            a = -100000;
+        }
+        if (b > 100000) {
+            b = 100000;
+        }
+
+        int N = (b - a) / h + 2;
+
+        if (N > 1000000) {
+            N = 1000000;
+            h = (b - a) / (N - 2);
+        }
+
+        QVector<double> x(N), y(N);
+        controller->set_expression(ui->result->text().toStdString());
+
+        int i = 0;
+        for (double X = a; X <= b; X += h) {
+          controller->set_x(X);
+          try {
+              y[i] = controller->get_result();
+          } catch(const std::exception& e) {
+              continue;
+          }
+          x[i] = X;
+          i++;
+        }
+        ui->graph->clearGraphs();
+        ui->graph->addGraph();
+
+        ui->graph->graph(0)->setData(x, y);
+        ui->graph->graph(0)->setPen(QColor(50, 50, 50, 255));
+        ui->graph->graph(0)->setLineStyle(QCPGraph::lsNone);
+
+        ui->graph->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 4));
+
+        ui->graph->xAxis->setLabel("x");
+        ui->graph->yAxis->setLabel("y");
+
+        ui->graph->xAxis->setRange(a, b);
+
+        double minY = y[0], maxY = y[0];
+        for (int i = 1; i < N; i++) {
+          if (y[i] <= minY) minY = y[i] - 1;
+          if (y[i] >= maxY) maxY = y[i] + 1;
+        }
+        ui->graph->yAxis->setRange(minY, maxY);
+
+        ui->graph->replot();
+
+        controller->reset();
+    }
+}
+
+void SmartCalcMainView::on_pushButton_clicked()
+{
+    ui->tabWidget->setCurrentIndex(1);
+    on_build_graph_clicked();
+}
