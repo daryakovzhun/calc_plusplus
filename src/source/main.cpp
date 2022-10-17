@@ -1,11 +1,13 @@
-#include "mainwindow.h"
+#include "smartcalcmainview.h"
 
 #include <QApplication>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     QApplication a(argc, argv);
-    MainWindow w;
-    w.setWindowTitle("Calculator");
-    w.show();
+    SmartCalcModel model;
+    SmartCalcController controller(&model);
+    SmartCalcMainView view(&controller);
+    view.show();
     return a.exec();
 }

@@ -18,11 +18,11 @@ all: install run
 install:
 	rm -rf install
 	mkdir install
-	qmake source/Calculator.pro -o ./install/Makefile
+	qmake source/SmartCalc.pro -o ./install/Makefile
 	make -C ./install
 
 run: install
-	open install/./Calculator*
+	open install/./SmartCalc*
 
 uninstall:
 	rm -rf calc/*
@@ -38,11 +38,11 @@ dvi:
 	open doc/readme.pdf
 
 dist:
-	rm -rf Calculator.1.0
-	mkdir Calculator.1.0
-	cp -r Makefile source Calculator.1.0/
-	tar cvzf ./Calculator.tgz Calculator.1.0/
-	rm -rf Calculator.1.0/
+	rm -rf SmartCalc.1.0
+	mkdir SmartCalc.1.0
+	cp -r Makefile source SmartCalc.1.0/
+	tar cvzf ./SmartCalc.tgz SmartCalc.1.0/
+	rm -rf SmartCalc.1.0/
 
 tests:
 	$(CC) source/calculator.h $(TEST_SOURCE) test/test.c -o test/exec $(LIN_FLAGS) $(GCOVFLAGS) $(LDFLAGS)

@@ -300,3 +300,83 @@ void SmartCalcMainView::on_credit_clicked()
     }
 }
 
+void SmartCalcMainView::on_add_replenishmen_2_clicked() {
+    QDynamicButton *button = new QDynamicButton(this);
+    ui->verticalLayout_7->addWidget(button);
+}
+
+void SmartCalcMainView::on_add_withdrawal_2_clicked() {
+    QDynamicButton *line_edit = new QDynamicButton(this);
+    ui->verticalLayout_8->addWidget(line_edit);
+}
+
+void SmartCalcMainView::on_delete_replenishmen_2_clicked() {
+    if (ui->verticalLayout_7->count() > 1) {
+        QDynamicButton *button = qobject_cast<QDynamicButton*>(ui->verticalLayout_7->
+            itemAt(ui->verticalLayout_7->count() - 1)->widget());
+        button->hide();
+        delete button;
+    }
+}
+
+void SmartCalcMainView::on_delete_withdrawal_2_clicked() {
+    if (ui->verticalLayout_8->count() > 1) {
+        QDynamicButton *button = qobject_cast<QDynamicButton*>(ui->verticalLayout_8->
+            itemAt(ui->verticalLayout_8->count() - 1)->widget());
+        button->hide();
+        delete button;
+    }
+}
+
+void SmartCalcMainView::on_calculate_contribution_2_clicked()
+{
+    double deposit_amount = ui->deposit_amount_2->text().toDouble();
+    double term = ui->term_3->text().toDouble();
+    double rate = ui->rate_3->text().toDouble();
+    double non_taxable = ui->tax_rate_2->text().toDouble() / 100 * 1000000;
+    bool capitalization = ui->capitalization_2->isChecked();
+    double amount_end = 0;
+
+    double interest_charges = 0;
+    double tax = 0;
+
+    if (capitalization) {
+        double count = 0;
+        if (ui->frequency->currentIndex() == 0) {
+            count = 365;
+            term *= 31;
+        } else if (ui->frequency->currentIndex() == 1) {
+            count = 52;
+            term *= 4 + 1;
+        } else if (ui->frequency->currentIndex() == 2) {
+            count = 12;
+        } else if (ui->frequency->currentIndex() == 3) {
+            count = 4;
+            term = ceil(term / 3);
+        } else if (ui->frequency->currentIndex() == 4) {
+            count = 2;
+            term = ceil(term / 6);
+        } else if (ui->frequency->currentIndex() == 5) {
+            count = 1;
+            term = ceil(term / 12);
+        } else if (ui->frequency->currentIndex() == 6) {
+            count = term;
+        }
+
+        if (count) {
+            amount_end = deposit_amount * pow((1 + (rate / 100) / count), term);
+            interest_charges = amount_end - deposit_amount;
+            tax = (interest_charges - non_taxable) * 0.13;
+        }
+
+    } else {
+        interest_charges = deposit_amount * rate * term * 31 / 365 / 100;
+        tax = (interest_charges - non_taxable) * 0.13;
+        amount_end = deposit_amount;
+    }
+
+    ui->interest_charges_2->setText(QString::number(interest_charges, 'f', 7));
+    ui->tax_amount_2->setText(QString::number(tax, 'f', 7));
+    ui->amount_end_2->setText(QString::number(amount_end, 'f', 7));
+}
+

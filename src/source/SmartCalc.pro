@@ -21,12 +21,14 @@ SOURCES += \
     smartcalcmainview.cpp \
     smartCalcModel.cpp \
     qcustomplot.cpp \
+    qdynamicbutton.cpp
 
 HEADERS += \
     smartCalcController.h \
     smartcalcmainview.h \
     smartCalcModel.h \
     qcustomplot.h \
+    qdynamicbutton.h
 
 FORMS += \
     smartcalcmainview.ui

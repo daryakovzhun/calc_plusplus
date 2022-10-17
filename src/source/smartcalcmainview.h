@@ -7,6 +7,7 @@
 #include <cctype>
 #include <QRegularExpressionValidator>
 #include <QVector>
+#include <qdynamicbutton.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SmartCalcMainView; }
@@ -52,7 +53,11 @@ private slots:
    void on_build_graph_clicked();
    void on_tabWidget_currentChanged(int index);
    void on_graph_move_clicked();
-
    void on_credit_clicked();
+   void on_calculate_contribution_2_clicked();
+   void on_add_replenishmen_2_clicked();
+   void on_add_withdrawal_2_clicked();
+   void on_delete_replenishmen_2_clicked();
+   void on_delete_withdrawal_2_clicked();
 };
 #endif // SMARTCALCMAINVIEW_H
