@@ -51,6 +51,8 @@ private slots:
    void on_button_clear_clicked();
    void on_build_graph_clicked();
    void on_tabWidget_currentChanged(int index);
-   void on_pushButton_clicked();
+   void on_graph_move_clicked();
+
+   void on_credit_clicked();
 };
 #endif // SMARTCALCMAINVIEW_H

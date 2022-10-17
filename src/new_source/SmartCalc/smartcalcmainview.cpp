@@ -251,8 +251,52 @@ void SmartCalcMainView::on_build_graph_clicked() {
     }
 }
 
-void SmartCalcMainView::on_pushButton_clicked()
+void SmartCalcMainView::on_graph_move_clicked()
 {
     ui->tabWidget->setCurrentIndex(1);
     on_build_graph_clicked();
 }
+
+
+
+
+void SmartCalcMainView::on_credit_clicked()
+{
+    double total_amount = ui->totalamount->text().toDouble();
+    double term = ui->term->text().toDouble() * 12;
+    double rate = ui->rate->text().toDouble() / 100;
+    double month_payment = 0;
+    double overpayment = 0;
+
+    if (total_amount && term && rate && total_amount > 0 && term > 0 && total_amount > 0) {
+        if (ui->annuity->isChecked()) {
+            double rate_month = rate / 12;
+            month_payment = total_amount * (rate_month / (1 - pow((1 + rate_month), -term)));
+            overpayment = (month_payment * term) - total_amount;
+
+            ui->month_payment->setText(QString::number(month_payment, 'f', 7));
+        } else if (ui->differentiated->isChecked()) {
+            month_payment = total_amount / term;
+            double overpayment_month = 0;
+
+            for (int i = 0; i < term; i++) {
+                overpayment_month = total_amount * rate / 12;
+
+                if (i == 0) {
+                    ui->month_payment->setText(QString::number(month_payment +
+                        overpayment_month, 'f', 3) + "..");
+                }
+                if (i == term - 1) {
+                    ui->month_payment->setText(ui->month_payment->text() +
+                        QString::number(month_payment + overpayment_month, 'f', 3));
+                }
+                overpayment += overpayment_month;
+                total_amount -= month_payment;
+            }
+            total_amount = month_payment * term;
+        }
+        ui->overpayment->setText(QString::number(overpayment, 'f', 3));
+        ui->total_payout->setText(QString::number(total_amount + overpayment, 'f', 3));
+    }
+}
+
