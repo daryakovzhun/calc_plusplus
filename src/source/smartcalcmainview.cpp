@@ -6,7 +6,7 @@ SmartCalcMainView::SmartCalcMainView(SmartCalcController *c, QWidget *parent)
 {
     ui->setupUi(this);
     ui->result->setMaxLength(255);
-//    ui->result->setReadOnly(true);
+
     ui->enter_x->setValidator(new QRegularExpressionValidator(
         QRegularExpression("(^[-0-9])([0-9]*)(\\.?)([0-9]*)"), this));
     ui->xmin->setValidator(new QRegularExpressionValidator(
@@ -26,6 +26,8 @@ SmartCalcMainView::SmartCalcMainView(SmartCalcController *c, QWidget *parent)
     connect(ui->button_7, SIGNAL(clicked()), this, SLOT(digits_numbers()));
     connect(ui->button_8, SIGNAL(clicked()), this, SLOT(digits_numbers()));
     connect(ui->button_9, SIGNAL(clicked()), this, SLOT(digits_numbers()));
+
+    ui->result->setFocus();
 }
 
 SmartCalcMainView::~SmartCalcMainView()
@@ -158,27 +160,21 @@ void SmartCalcMainView::on_button_cl_bracket_clicked() {
 }
 
 void SmartCalcMainView::on_button_x_clicked() {
-    int len = ui->result->text().length();
-    if ((len > 0 && ui->result->text()[len - 1] != 'x') || len == 0) {
-        ui->result->setText(ui->result->text() + "x");
-    }
+    ui->result->setText(ui->result->text() + "x");
 }
 
 void SmartCalcMainView::on_button_eq_clicked() {
-    if (ui->result->text().length() > 0) {
-        std::string expression = ui->result->text().toStdString();
-        controller->set_expression(expression);
-        controller->set_x(ui->enter_x->text().toDouble());
-
-        try {
-            double result = controller->get_result();
-            ui->result->setText(QString::number(result, 'f'));
-        } catch(const std::exception& e) {
-            ui->result->setText("Error");
-        }
-
-        controller->reset();
+    std::string expression = ui->result->text().toStdString();
+    controller->set_expression(expression);
+    controller->set_x(ui->enter_x->text().toDouble());
+    try {
+        double result = controller->get_result();
+        ui->result->setText(QString::number(result, 'f'));
+    } catch(const std::exception& e) {
+        ui->result->setText("Error");
     }
+
+    controller->reset();
 }
 
 void SmartCalcMainView::on_tabWidget_currentChanged(int index)
@@ -191,8 +187,6 @@ void SmartCalcMainView::on_tabWidget_currentChanged(int index)
         }
     }
 }
-
-
 
 void SmartCalcMainView::on_build_graph_clicked() {
     ui->graph->clearGraphs();
@@ -384,12 +378,6 @@ void SmartCalcMainView::on_calculate_contribution_2_clicked()
     ui->tax_amount_2->setText(QString::number(tax, 'f', 7));
     ui->amount_end_2->setText(QString::number(amount_end, 'f', 7));
 }
-
-
-
-
-
-
 
 void SmartCalcMainView::on_result_returnPressed()
 {

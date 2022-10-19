@@ -1,9 +1,13 @@
 #include "smartCalcModel.h"
 
+#include <QDebug>
+
 bool SmartCalcModel::to_postfix() {
-    if (ex_postfix_ != "") {
-        return false;
+    if (expression_.empty() || (!std::isalpha(expression_[0]) && !std::isdigit(expression_[0]))) {
+        return true;
     }
+    if (ex_postfix_ != "") { return false; }
+
     bool error = count_bracket() || replace();
     std::stack<char> st;
     size_t len_str = expression_.size();
@@ -45,6 +49,8 @@ bool SmartCalcModel::to_postfix() {
                     ex_postfix_ += top; ex_postfix_ += ' ';
                 }
             }
+        } else if (std::isalpha(expression_[i])) {
+            error = true;
         }
     }
 
