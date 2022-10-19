@@ -1,9 +1,8 @@
 #include "smartCalcModel.h"
 
-#include <QDebug>
-
 bool SmartCalcModel::to_postfix() {
-    if (expression_.empty() || (!std::isalpha(expression_[0]) && !std::isdigit(expression_[0]))) {
+    if (expression_.empty() || (!std::isalpha(expression_[0]) && !std::isdigit(expression_[0])
+            && !is_operator(expression_[0]) && expression_[0] != '(')) {
         return true;
     }
     if (ex_postfix_ != "") { return false; }
@@ -49,7 +48,7 @@ bool SmartCalcModel::to_postfix() {
                     ex_postfix_ += top; ex_postfix_ += ' ';
                 }
             }
-        } else if (std::isalpha(expression_[i])) {
+        } else if (expression_[i] != ' ') {
             error = true;
         }
     }
@@ -239,4 +238,3 @@ void SmartCalcModel::calculate(char op, double* a, double* b, double* result) {
         *result = (double) log10l(*a);
     }
 }
-

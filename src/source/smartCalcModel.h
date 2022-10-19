@@ -6,8 +6,8 @@
 #include <stack>
 #include <cmath>
 #include <algorithm>
-
-#include <iostream>
+#include <stdexcept>
+#include <clocale>
 
 class SmartCalcModel
 {
