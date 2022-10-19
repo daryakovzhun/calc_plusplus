@@ -59,5 +59,6 @@ private slots:
    void on_add_withdrawal_2_clicked();
    void on_delete_replenishmen_2_clicked();
    void on_delete_withdrawal_2_clicked();
+   void on_result_returnPressed();
 };
 #endif // SMARTCALCMAINVIEW_H

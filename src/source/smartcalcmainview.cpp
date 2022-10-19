@@ -35,9 +35,14 @@ SmartCalcMainView::~SmartCalcMainView()
 
 void SmartCalcMainView::digits_numbers() {
     QPushButton *button = (QPushButton *)sender();
-    QString new_label =  ui->result->text() + button->text();
 
-    ui->result->setText(new_label);
+    if (ui->result->hasFocus()) {
+        QString new_label =  ui->result->text() + button->text();
+        ui->result->setText(new_label);
+    } else if (ui->enter_x->hasFocus()) {
+        QString new_label =  ui->enter_x->text() + button->text();
+        ui->enter_x->setText(new_label);
+    }
 }
 
 void SmartCalcMainView::on_button_dot_clicked() {
@@ -378,5 +383,16 @@ void SmartCalcMainView::on_calculate_contribution_2_clicked()
     ui->interest_charges_2->setText(QString::number(interest_charges, 'f', 7));
     ui->tax_amount_2->setText(QString::number(tax, 'f', 7));
     ui->amount_end_2->setText(QString::number(amount_end, 'f', 7));
+}
+
+
+
+
+
+
+
+void SmartCalcMainView::on_result_returnPressed()
+{
+    on_button_eq_clicked();
 }
 
