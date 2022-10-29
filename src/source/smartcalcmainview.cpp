@@ -52,33 +52,44 @@ void SmartCalcMainView::on_button_dot_clicked() {
 }
 
 void SmartCalcMainView::on_button_reset_clicked() {
-    ui->result->setText("");
+    if (ui->result->hasFocus()) {
+        ui->result->setText("");
+    } else if (ui->enter_x->hasFocus()) {
+        ui->enter_x->setText("");
+    } 
 }
 
 void SmartCalcMainView::on_button_clear_clicked() {
-    std::string str = ui->result->text().toStdString();
-    std::string op = "+-*/";
-    size_t len = str.size();
-    if (len > 0) {
-        if (std::count(op.begin(), op.end(), str[len - 1]) || str[str.size() - 1] == ')') {
-            str.erase(str.size() - 1);
-        } else if (isdigit(str[str.size() - 1]) || str[str.size() - 1] == '.') {
-            while (len > 0 && (isdigit(str[str.size() - 1]) || str[str.size() - 1] == '.')) {
+    std::string str;
+    if (ui->result->hasFocus()) {
+        str = ui->result->text().toStdString();
+
+        std::string op = "+-*/";
+        size_t len = str.size();
+        if (len > 0) {
+            if (std::count(op.begin(), op.end(), str[len - 1]) || str[str.size() - 1] == ')') {
                 str.erase(str.size() - 1);
-                len = str.size();
-            }
-        } else {
-            if (str[str.size() - 1] == '(') {
-                str.erase(str.size() - 1);
-            }
-            while (len > 0 && (isalpha(str[str.size() - 1]) || str[str.size() - 1] == '^')) {
-                str.erase(str.size() - 1);
-                len = str.size();
+            } else if (isdigit(str[str.size() - 1]) || str[str.size() - 1] == '.') {
+                while (len > 0 && (isdigit(str[str.size() - 1]) || str[str.size() - 1] == '.')) {
+                    str.erase(str.size() - 1);
+                    len = str.size();
+                }
+            } else {
+                if (str[str.size() - 1] == '(') {
+                    str.erase(str.size() - 1);
+                }
+                while (len > 0 && (isalpha(str[str.size() - 1]) || str[str.size() - 1] == '^')) {
+                    str.erase(str.size() - 1);
+                    len = str.size();
+                }
             }
         }
+        ui->result->setText(QString::fromStdString(str));
+    } else if (ui->enter_x->hasFocus()) {
+        str = ui->enter_x->text().toStdString();
+        if (str.size() > 0) { str.erase(str.size() - 1);} 
+        ui->enter_x->setText(QString::fromStdString(str));
     }
-
-    ui->result->setText(QString::fromStdString(str));
 }
 
 QString SmartCalcMainView::change_op() {
