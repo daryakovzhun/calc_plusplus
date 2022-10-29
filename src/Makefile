@@ -12,8 +12,7 @@ TEST_SOURCE = \
 
 all: install run
 
-install:
-	rm -rf install
+install: clean
 	mkdir install
 	qmake source/SmartCalc.pro -o ./install/Makefile
 	make -C ./install
