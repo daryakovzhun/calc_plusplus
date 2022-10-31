@@ -1,4 +1,4 @@
-CC = g++ -g
+CC = g++ -std=c++17
 QMAKE_PATH = qmake
 LIN_FLAGS = -lgtest -lgmock -pthread
 ifeq ($(shell uname), Linux)
@@ -42,18 +42,18 @@ dist:
 	rm -rf SmartCalc.1.0/
 
 tests:
-	$(CC) $(TEST_SOURCE)  -o test/exec $(LIN_FLAGS) $(GCOVFLAGS) 
+	$(CC) $(TEST_SOURCE) $(LIN_FLAGS) $(GCOVFLAGS) -o test/exec
 	test/./exec
 
 gcov_report: tests
 	lcov -t report -o report.info -c -d . --no-external
 	genhtml report.info -o finish
 
-# lint:
-# 	python3 ../materials/linters/cpplint.py --extensions=cpp source/mainwindow.cpp \
-# 	source/main.cpp source/graph.cpp source/credit.cpp source/deposit.cpp
-# 	python3 ../materials/linters/cpplint.py --extensions=c source/*.c \
-# 	source/calculator.h source/mainwindow.h
+lint:
+	cp ../materials/linters/.clang-format ./
+	clang-format -i source/*.cpp source/*.h
+	clang-format -n source/*.cpp source/*.h
+	rm -rf .clang-format
 
 
 .PHONY: all install run uninstall clean dvi dist gcov_report
