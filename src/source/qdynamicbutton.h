@@ -9,14 +9,14 @@ class QDynamicButton;
 
 class QDynamicButton : public QLineEdit {
   Q_OBJECT
-public:
+ public:
   explicit QDynamicButton(QWidget *parent = 0);
   ~QDynamicButton();
   static int ResID;
   int getID();
 
-private:
+ private:
   int buttonID = 0;
 };
 
-#endif // QDYNAMICBUTTON_H
+#endif  // QDYNAMICBUTTON_H

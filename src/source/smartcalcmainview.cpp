@@ -2,6 +2,7 @@
 
 #include "ui_smartcalcmainview.h"
 
+namespace s21 {
 SmartCalcMainView::SmartCalcMainView(SmartCalcController *c, QWidget *parent)
     : QMainWindow(parent), ui(new Ui::SmartCalcMainView), controller(c) {
   ui->setupUi(this);
@@ -205,12 +206,9 @@ void SmartCalcMainView::on_build_graph_clicked() {
 
   if (ui->result->text().length() > 0) {
     double a = -10, b = 10, h = 1;
-    if (ui->xmin->text().length() != 0)
-      a = ui->xmin->text().toDouble();
-    if (ui->xmax->text().length() != 0)
-      b = ui->xmax->text().toDouble();
-    if (ui->step->text().length() != 0)
-      h = ui->step->text().toDouble();
+    if (ui->xmin->text().length() != 0) a = ui->xmin->text().toDouble();
+    if (ui->xmax->text().length() != 0) b = ui->xmax->text().toDouble();
+    if (ui->step->text().length() != 0) h = ui->step->text().toDouble();
 
     if (a > b || h <= 0) {
       a = 0;
@@ -261,10 +259,8 @@ void SmartCalcMainView::on_build_graph_clicked() {
 
     double minY = y[0], maxY = y[0];
     for (int i = 1; i < N; i++) {
-      if (y[i] <= minY)
-        minY = y[i] - 1;
-      if (y[i] >= maxY)
-        maxY = y[i] + 1;
+      if (y[i] <= minY) minY = y[i] - 1;
+      if (y[i] >= maxY) maxY = y[i] + 1;
     }
     ui->graph->yAxis->setRange(minY, maxY);
     ui->graph->replot();
@@ -403,3 +399,4 @@ void SmartCalcMainView::on_calculate_contribution_2_clicked() {
 }
 
 void SmartCalcMainView::on_result_returnPressed() { on_button_eq_clicked(); }
+}  // namespace s21

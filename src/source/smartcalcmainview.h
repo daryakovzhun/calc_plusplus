@@ -17,19 +17,20 @@ class SmartCalcMainView;
 }
 QT_END_NAMESPACE
 
+namespace s21 {
 class SmartCalcMainView : public QMainWindow {
   Q_OBJECT
 
-public:
+ public:
   SmartCalcMainView(SmartCalcController *c, QWidget *parent = nullptr);
   ~SmartCalcMainView();
 
-private:
+ private:
   Ui::SmartCalcMainView *ui;
   SmartCalcController *controller;
   QString change_op();
 
-private slots:
+ private slots:
   void digits_numbers();
   void on_button_dot_clicked();
   void on_button_reset_clicked();
@@ -64,4 +65,6 @@ private slots:
   void on_delete_withdrawal_2_clicked();
   void on_result_returnPressed();
 };
-#endif // SMARTCALCMAINVIEW_H
+}  // namespace s21
+
+#endif  // SMARTCALCMAINVIEW_H

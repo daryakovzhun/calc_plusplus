@@ -51,8 +51,8 @@ gcov_report: tests
 
 lint:
 	cp ../materials/linters/.clang-format ./
-	clang-format -i source/*.cpp source/*.h
-	clang-format -n source/*.cpp source/*.h
+	clang-format -i source/*.cpp source/*.h test/*.cc
+	clang-format -n source/*.cpp source/*.h test/*.cc
 	rm -rf .clang-format
 
 

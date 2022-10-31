@@ -9,8 +9,9 @@
 #include <stdexcept>
 #include <string>
 
+namespace s21 {
 class SmartCalcModel {
-public:
+ public:
   SmartCalcModel() : expression_(""), ex_postfix_(""), result_(0), x_(0){};
   void set_expression(std::string str) { expression_ = str; }
   void set_x(double x) { x_ = x; }
@@ -29,7 +30,7 @@ public:
     return result_;
   }
 
-private:
+ private:
   std::string expression_;
   std::string ex_postfix_;
   double result_, x_;
@@ -46,5 +47,5 @@ private:
   void calculate(char op, double *a, double *b, double *result);
   bool check_double_dot(std::string *str_number);
 };
-
+}  // namespace s21
 #endif

@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "../source/smartCalcModel.h"
 
@@ -134,118 +134,55 @@ TEST(SmartCalc, incorrect_test) {
   SmartCalcModel model;
   model.set_expression("2^(3)) + 4");
   int error = 0;
-  // try {
-  //   double my_result = model.get_result();
-  // } catch (const std::exception& e) {
-  //   error = 1;
-  // }
   EXPECT_ANY_THROW(model.get_result());
-
-  // EXPECT_EQ(error, 1);
 }
 
 TEST(SmartCalc, incorrect_input_1) {
   SmartCalcModel model;
   model.set_expression("san(5)");
-  int error = 0;
-  try {
-    double my_result = model.get_result();
-  } catch (const std::exception& e) {
-    error = 1;
-  }
-
-  EXPECT_EQ(error, 1);
+  EXPECT_ANY_THROW(model.get_result());
 }
 
 TEST(SmartCalc, incorrect_input_2) {
   SmartCalcModel model;
   model.set_expression("f");
-  int error = 0;
-  try {
-    double my_result = model.get_result();
-  } catch (const std::exception& e) {
-    error = 1;
-  }
-
-  EXPECT_EQ(error, 1);
+  EXPECT_ANY_THROW(model.get_result());
 }
 
 TEST(SmartCalc, incorrect_input_3) {
   SmartCalcModel model;
   model.set_expression("");
-  int error = 0;
-  try {
-    double my_result = model.get_result();
-  } catch (const std::exception& e) {
-    error = 1;
-  }
-
-  EXPECT_EQ(error, 1);
+  EXPECT_ANY_THROW(model.get_result());
 }
 
 TEST(SmartCalc, incorrect_input_4) {
   SmartCalcModel model;
   model.set_expression("()");
-  int error = 0;
-  try {
-    double my_result = model.get_result();
-  } catch (const std::exception& e) {
-    error = 1;
-  }
-
-  EXPECT_EQ(error, 1);
+  EXPECT_ANY_THROW(model.get_result());
 }
 
 TEST(SmartCalc, incorrect_input_5) {
   SmartCalcModel model;
   model.set_expression("1+");
-  int error = 0;
-  try {
-    double my_result = model.get_result();
-  } catch (const std::exception& e) {
-    error = 1;
-  }
-
-  EXPECT_EQ(error, 1);
+  EXPECT_ANY_THROW(model.get_result());
 }
 
 TEST(SmartCalc, incorrect_input_6) {
   SmartCalcModel model;
   model.set_expression("1/0");
-  int error = 0;
-  try {
-    double my_result = model.get_result();
-  } catch (const std::exception& e) {
-    error = 1;
-  }
-
-  EXPECT_EQ(error, 1);
+  EXPECT_ANY_THROW(model.get_result());
 }
 
 TEST(SmartCalc, incorrect_input_7) {
   SmartCalcModel model;
   model.set_expression("+");
-  int error = 0;
-  try {
-    double my_result = model.get_result();
-  } catch (const std::exception& e) {
-    error = 1;
-  }
-
-  EXPECT_EQ(error, 1);
+  EXPECT_ANY_THROW(model.get_result());
 }
 
 TEST(SmartCalc, incorrect_input_8) {
   SmartCalcModel model;
   model.set_expression("((2+3)");
-  int error = 0;
-  try {
-    double my_result = model.get_result();
-  } catch (const std::exception& e) {
-    error = 1;
-  }
-
-  EXPECT_EQ(error, 1);
+  EXPECT_ANY_THROW(model.get_result());
 }
 
 int main(int argc, char** argv) {

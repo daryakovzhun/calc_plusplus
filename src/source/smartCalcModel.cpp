@@ -1,5 +1,6 @@
 #include "smartCalcModel.h"
 
+namespace s21 {
 bool SmartCalcModel::to_postfix() {
   if (expression_.empty() ||
       (!std::isalpha(expression_[0]) && !std::isdigit(expression_[0]) &&
@@ -19,14 +20,16 @@ bool SmartCalcModel::to_postfix() {
         expression_[i] == '.' || expression_[i] == 'e') {
       ex_postfix_ += expression_[i];
 
-      if (i != len_str - 1 && expression_[i] == 'e' && expression_[i + 1] == '-') {
+      if (i != len_str - 1 && expression_[i] == 'e' &&
+          expression_[i + 1] == '-') {
         ex_postfix_ += expression_[i + 1];
         i++;
       }
 
       if (i == len_str - 1 ||
-          (!isdigit(expression_[i + 1]) && expression_[i + 1] != '.' && expression_[i + 1] != 'e')) {
-          ex_postfix_ += ' ';
+          (!isdigit(expression_[i + 1]) && expression_[i + 1] != '.' &&
+           expression_[i + 1] != 'e')) {
+        ex_postfix_ += ' ';
       }
 
     } else if (expression_[i] == '(' || is_func(expression_[i])) {
@@ -97,14 +100,17 @@ bool SmartCalcModel::evaluate() {
   for (size_t i = 0; i < len_str && !error; i++) {
     if (ex_postfix_[i] == 'x') {
       st.push(x_);
-    } else if (isdigit(ex_postfix_[i]) || ex_postfix_[i] == '.' || ex_postfix_[i] == 'e') {
+    } else if (isdigit(ex_postfix_[i]) || ex_postfix_[i] == '.' ||
+               ex_postfix_[i] == 'e') {
       std::string str_number;
       str_number += ex_postfix_[i];
       while (i != len_str - 1 && ex_postfix_[i + 1] != ' ') {
         str_number += ex_postfix_[i + 1];
         i++;
       }
-      if (check_double_dot(&str_number)) { error = true; }
+      if (check_double_dot(&str_number)) {
+        error = true;
+      }
       st.push(atof(str_number.c_str()));
     } else if (is_func(ex_postfix_[i]) || is_operator(ex_postfix_[i])) {
       if (st.empty()) {
@@ -159,10 +165,8 @@ int SmartCalcModel::get_priority(char op) {
 bool SmartCalcModel::count_bracket() {
   int count_op = 0, count_cl = 0;
   for (size_t i = 0; i < expression_.size(); i++) {
-    if (expression_[i] == '(')
-      count_op++;
-    if (expression_[i] == ')')
-      count_cl++;
+    if (expression_[i] == '(') count_op++;
+    if (expression_[i] == ')') count_cl++;
   }
   return count_cl != count_op;
 }
@@ -261,3 +265,4 @@ void SmartCalcModel::calculate(char op, double *a, double *b, double *result) {
     *result = (double)log10l(*a);
   }
 }
+}  // namespace s21
