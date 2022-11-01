@@ -3,6 +3,8 @@
 
 #include "../source/smartCalcModel.h"
 
+using namespace s21;
+
 TEST(SmartCalc, asin) {
   SmartCalcModel model;
 
@@ -133,7 +135,6 @@ TEST(SmartCalc, arifmetic_test) {
 TEST(SmartCalc, incorrect_test) {
   SmartCalcModel model;
   model.set_expression("2^(3)) + 4");
-  int error = 0;
   EXPECT_ANY_THROW(model.get_result());
 }
 
@@ -185,7 +186,36 @@ TEST(SmartCalc, incorrect_input_8) {
   EXPECT_ANY_THROW(model.get_result());
 }
 
-int main(int argc, char** argv) {
+TEST(SmartCalc, incorrect_input_9) {
+  SmartCalcModel model;
+  model.set_expression("5..6");
+  EXPECT_ANY_THROW(model.get_result());
+}
+
+TEST(SmartCalc, repeat_input_1) {
+  SmartCalcModel model;
+  model.set_expression("2+3");
+  double result = model.get_result();
+  result = model.get_result();
+  EXPECT_EQ(fabs(result - 5.0) < 1e-6, 1);
+}
+
+TEST(SmartCalc, exp_negative) {
+  SmartCalcModel model;
+  model.set_expression("2e-3");
+  double my_result = model.get_result();
+  double test_result = 0.002;
+  EXPECT_EQ(fabs(my_result - test_result) < 1e-6, 1);
+}
+
+TEST(SmartCalc, unar_and_op) {
+  SmartCalcModel model;
+  model.set_expression("3/-3 - 6/-2");
+  double my_result = model.get_result();
+  EXPECT_EQ(fabs(my_result - 2.0) < 1e-6, 1);
+}
+
+int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
 
   return RUN_ALL_TESTS();

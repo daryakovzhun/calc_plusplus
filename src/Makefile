@@ -1,4 +1,4 @@
-CC = g++ -std=c++17
+CC = g++ -std=c++17 -Wall -Wextra -Werror -pedantic
 QMAKE_PATH = qmake
 LIN_FLAGS = -lgtest -lgmock -pthread
 ifeq ($(shell uname), Linux)
@@ -13,20 +13,25 @@ TEST_SOURCE = \
 all: install run
 
 install: clean
-	mkdir install
-	qmake source/SmartCalc.pro -o ./install/Makefile
-	make -C ./install
+	mkdir ../install
+	qmake source/SmartCalc.pro -o ../install/Makefile
+	make -C ../install
 
-run: install
-	open install/./SmartCalc*
+run:
+ifeq ("$(shell test -e ../install/SmartCalc.app && echo yes)","yes")
+	open ../install/./SmartCalc*
+else
+	make install
+	open ../install/./SmartCalc*
+endif
 
 uninstall:
-	rm -rf calc/*
+	rm -rf ../install
 
 clean:
 	rm -rf gcov_test
 	rm -rf test/exec*
-	rm -rf install
+	rm -rf ../install
 	rm -rf *.tgz
 	rm -rf *.gcno *.gcda *.info check_res
 	rm -rf finish

@@ -1,6 +1,6 @@
 #include <QApplication>
 
-#include "smartcalcmainview.h"
+#include "smartCalcMainView.h"
 
 using namespace s21;
 

@@ -43,9 +43,12 @@ class SmartCalcModel {
   bool is_func(char op);
   bool is_operator(char symbol);
   void replace_str(std::string src, std::string dst);
+  void replace_str_unar(std::string src, std::string dst);
+
   bool replace();
   void calculate(char op, double *a, double *b, double *result);
   bool check_double_dot(std::string *str_number);
+  bool check_incorrect_input();
 };
 }  // namespace s21
 #endif

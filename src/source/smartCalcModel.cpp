@@ -1,17 +1,14 @@
 #include "smartCalcModel.h"
 
+#include <iostream>
+
 namespace s21 {
 bool SmartCalcModel::to_postfix() {
-  if (expression_.empty() ||
-      (!std::isalpha(expression_[0]) && !std::isdigit(expression_[0]) &&
-       !is_operator(expression_[0]) && expression_[0] != '(')) {
-    return true;
-  }
   if (ex_postfix_ != "") {
     return false;
   }
 
-  bool error = count_bracket() || replace();
+  bool error = check_incorrect_input() || count_bracket() || replace();
   std::stack<char> st;
   size_t len_str = expression_.size();
 
@@ -38,7 +35,11 @@ bool SmartCalcModel::to_postfix() {
       char op = expression_[i], op2;
       while (!st.empty() && (op2 = st.top())) {
         st.pop();
-        if (get_priority(op2) >= get_priority(op)) {
+        bool check_op = (expression_[i] == '^')
+                            ? get_priority(op2) > get_priority(op)
+                            : get_priority(op2) >= get_priority(op);
+
+        if (check_op) {
           ex_postfix_ += op2;
           ex_postfix_ += ' ';
         } else {
@@ -75,14 +76,9 @@ bool SmartCalcModel::to_postfix() {
   while (!st.empty() && !error) {
     char op = st.top();
     st.pop();
-    if ((op == '(' || op == ')')) {
-      error = true;
-      break;
-    }
     ex_postfix_ += op;
     ex_postfix_ += ' ';
   }
-
   return error;
 }
 
@@ -92,10 +88,18 @@ bool SmartCalcModel::check_double_dot(std::string *str_number) {
   return count_dot > 1;
 }
 
+bool SmartCalcModel::check_incorrect_input() {
+  return expression_.empty() ||
+         (!std::isalpha(expression_[0]) && !std::isdigit(expression_[0]) &&
+          !is_operator(expression_[0]) && expression_[0] != '(' &&
+          expression_[0] != ' ');
+}
+
 bool SmartCalcModel::evaluate() {
   setlocale(LC_NUMERIC, "C");
   std::stack<double> st;
   size_t len_str = ex_postfix_.size();
+
   bool error = false;
   for (size_t i = 0; i < len_str && !error; i++) {
     if (ex_postfix_[i] == 'x') {
@@ -189,6 +193,19 @@ void SmartCalcModel::replace_str(std::string src, std::string dst) {
   }
 }
 
+void SmartCalcModel::replace_str_unar(std::string src, std::string dst) {
+  size_t pos = expression_.find(src);
+  while (pos != std::string::npos && pos != expression_.size()) {
+    if (pos != 0 && is_operator(expression_[pos - 1]) &&
+        expression_[pos] == src[0]) {
+      expression_.replace(pos, src.size(), dst);
+      pos = expression_.find(src, pos);
+    } else {
+      pos++;
+    }
+  }
+}
+
 bool SmartCalcModel::replace() {
   replace_str("acos(", "C(");
   replace_str("asin(", "S(");
@@ -205,10 +222,12 @@ bool SmartCalcModel::replace() {
     expression_[0] = '@';
   }
   replace_str("(+", "(@");
+  replace_str_unar("+", "@");
 
   if (expression_[0] == '-') {
     expression_[0] = '~';
   }
+  replace_str_unar("-", "~");
   replace_str("(-", "(~");
 
   size_t count_alfha = 0;

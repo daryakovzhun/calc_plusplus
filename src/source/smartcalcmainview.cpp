@@ -1,6 +1,6 @@
-#include "smartcalcmainview.h"
+#include "smartCalcMainView.h"
 
-#include "ui_smartcalcmainview.h"
+#include "ui_smartCalcMainView.h"
 
 namespace s21 {
 SmartCalcMainView::SmartCalcMainView(SmartCalcController *c, QWidget *parent)
@@ -29,6 +29,9 @@ SmartCalcMainView::SmartCalcMainView(SmartCalcController *c, QWidget *parent)
   connect(ui->button_9, SIGNAL(clicked()), this, SLOT(digits_numbers()));
 
   ui->result->setFocus();
+
+  ui->graph->setInteraction(QCP::iRangeZoom, true);
+  ui->graph->setInteraction(QCP::iRangeDrag, true);
 }
 
 SmartCalcMainView::~SmartCalcMainView() { delete ui; }
